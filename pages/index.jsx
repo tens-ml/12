@@ -44,12 +44,16 @@ export default function Home({ data }) {
 export async function getServerSideProps(context) {
   const req = await getServerSession(context.req, context.res, authOptions);
   if (req) {
-    return {
-      redirect: {
-        destination: "/catalog",
-        permanent: false,
-      },
-    };
+    console.log("request:");
+    console.log(JSON.stringify(req));
+    // return {
+    //   redirect: {
+    //     destination: "/catalog",
+    //     permanent: false,
+    //   },
+    // };
+  } else {
+    console.log("not req");
   }
 
   return { props: {} };
