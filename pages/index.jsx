@@ -2,10 +2,11 @@ import Button from "@/components/Button";
 import Paper from "@/components/Paper";
 import Shell from "@/components/Shell";
 import Title from "@/components/Title";
+import { getServerSession } from "next-auth/next";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-
-export default function Home() {
+import { authOptions } from "./api/auth/[...nextauth]";
+export default function Home({ data }) {
   const router = useRouter();
   const handleForgotPassword = () => {
     router.push("/forgot-password");
@@ -38,4 +39,18 @@ export default function Home() {
       </Paper>
     </Shell>
   );
+}
+
+export async function getServerSideProps(context) {
+  const req = await getServerSession(context.req, context.res, authOptions);
+  if (req) {
+    return {
+      redirect: {
+        destination: "/catalog",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: {} };
 }
