@@ -16,11 +16,15 @@ const credentialProvider = CredentialsProvider({
       body: JSON.stringify(credentials),
       headers: { "Content-Type": "application/json" },
     });
-
     if (res.ok) {
-      return { name: "danny" };
+      console.log("resok");
+      return {
+        name: "danny",
+        email: "danny@dan.com",
+        image: "https://www.jea.com/cdn/images/avatar/avatar-alt.svg",
+      };
     }
-
+    console.log("didnt get okay");
     return null;
   },
 });
@@ -34,20 +38,6 @@ export const authOptions = {
     }),
     credentialProvider,
   ],
-  session: { jwt: true },
-  callbacks: {
-    async jwt({ token, account }) {
-      // Persist the OAuth access_token and or the user id to the token right after signin
-      if (account) {
-        token.accessToken = account.access_token;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      session.accessToken = token.accessToken;
-      return session;
-    },
-  },
 };
 
 export default NextAuth(authOptions);

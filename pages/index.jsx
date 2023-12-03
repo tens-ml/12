@@ -2,10 +2,9 @@ import Button from "@/components/Button";
 import Paper from "@/components/Paper";
 import Shell from "@/components/Shell";
 import Title from "@/components/Title";
-import { getServerSession } from "next-auth/next";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { authOptions } from "./api/auth/[...nextauth]";
+
 export default function Home({ data }) {
   const router = useRouter();
   const handleForgotPassword = () => {
@@ -13,8 +12,8 @@ export default function Home({ data }) {
   };
 
   const { user } = useSession();
-  if (user) router.push("/catalog");
-
+  //if (user) router.push("/catalog");
+  if (user) console.log("authed");
   return (
     <Shell>
       <Paper width="600px" className="mt-32">
@@ -24,9 +23,14 @@ export default function Home({ data }) {
           <div className="grow flex flex-col justify-center space-y-2">
             <Button onClick={() => router.push("/signup")}>Sign up</Button>
             <Button
-              onClick={() => signIn(undefined, { callbackUrl: "/catalog" })}
+              onClick={() => signIn("github", { callbackUrl: "/catalog" })}
             >
-              Login
+              Login with Github
+            </Button>
+            <Button
+              onClick={() => signIn("Credentials", { callbackUrl: "/catalog" })}
+            >
+              Login with Credentials
             </Button>
             <a
               className="cursor-pointer text-right"
@@ -39,22 +43,4 @@ export default function Home({ data }) {
       </Paper>
     </Shell>
   );
-}
-
-export async function getServerSideProps(context) {
-  const req = await getServerSession(context.req, context.res, authOptions);
-  if (req) {
-    console.log("request:");
-    console.log(JSON.stringify(req));
-    // return {
-    //   redirect: {
-    //     destination: "/catalog",
-    //     permanent: false,
-    //   },
-    // };
-  } else {
-    console.log("not req");
-  }
-
-  return { props: {} };
 }
