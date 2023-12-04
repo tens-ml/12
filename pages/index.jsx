@@ -11,26 +11,22 @@ export default function Home({ data }) {
     router.push("/forgot-password");
   };
 
-  const { user } = useSession();
-  //if (user) router.push("/catalog");
-  if (user) console.log("authed");
+  const { data: session, status } = useSession();
+  const user = session?.user;
+  if (status === "authenticated") router.push("/catalog");
+
   return (
     <Shell>
-      <Paper width="600px" className="mt-32">
+      <Paper width="600px" className="mt-12">
         <img src="/logo.jpg" width={240} height={240} alt="Logo" />
         <div className="grow flex flex-col ml-8">
           <Title className="text-center mt-8">Welcome</Title>
           <div className="grow flex flex-col justify-center space-y-2">
             <Button onClick={() => router.push("/signup")}>Sign up</Button>
             <Button
-              onClick={() => signIn("github", { callbackUrl: "/catalog" })}
+              onClick={() => signIn(undefined, { callbackUrl: "/catalog" })}
             >
-              Login with Github
-            </Button>
-            <Button
-              onClick={() => signIn("Credentials", { callbackUrl: "/catalog" })}
-            >
-              Login with Credentials
+              Login
             </Button>
             <a
               className="cursor-pointer text-right"
